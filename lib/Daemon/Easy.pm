@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use POSIX;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 sub import{
@@ -42,7 +42,7 @@ sub _run{
         if ( status($args) ){
             print "the daemon is running with pid: ".status($args)."\n";
         }else{
-            print "the daemon stoped\n";
+            print "the daemon stopped\n";
         }
     }elsif( $cmd eq 'restart' ){
         stop($args);
@@ -63,7 +63,7 @@ sub start{
     my $pid = fork();
     die "cant fork, $!\n" unless defined $pid;
     
-    if($pid){ # parent, remember the chind pid, and exit
+    if($pid){ # parent, remember the child pid, and exit
         open PID,">$args->{pidfile}" or die "cant open $args->{pidfile}, $!\n";
         print PID $pid;
         close PID;
@@ -117,6 +117,13 @@ __END__
 
 Daemon::Easy - easily create a daemon
 
+This is a pretty light weight module for easily creating a daemon.
+
+The execution of the daemon is controlled by checking whether 
+a stopfile exists in each running loop.
+
+The pidfile stores the pid of the running daemon. 
+
 =head1 SYNOPSIS
 
     use Daemon::Easy sleep=>5, stopfile=>'stop', pidfile=>'pid', callback=>'worker';
@@ -136,7 +143,7 @@ Daemon::Easy - easily create a daemon
 
 =head1 AUTHOR
 
-Zhang Jun, E<lt>jzhang533@gmail.com<gt>
+Zhang Jun, E<lt> jzhang533@gmail.com E<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
